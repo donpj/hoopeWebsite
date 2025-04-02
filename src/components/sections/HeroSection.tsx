@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react"; // Keep commented if rotation is not used
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 const placeholderImages = [
-  "/images/placeholders/1.png ",
+  "/images/placeholders/1.png", // Ensure path is correct
   "/images/placeholders/2.png",
   "/images/placeholders/3.png",
   "/images/placeholders/4.png",
@@ -15,6 +15,24 @@ const placeholderImages = [
   "/images/placeholders/6.png",
   "/images/placeholders/7.jpg",
 ];
+
+// Define Animation Variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeInOut" },
+  },
+};
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.8, delay: 0.2, ease: "easeInOut" },
+  }, // Slight delay for image
+};
 
 // Create a motion-compatible Image component
 const MotionImage = motion(Image);
@@ -34,12 +52,15 @@ export default function HeroSection() {
   // }, []);
 
   return (
-    <section className="py-20 px-4 md:px-8">
+    <section className="py-20 px-4 md:px-8 overflow-hidden">
+      {" "}
+      {/* Added overflow-hidden */}
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div>
+          {/* Animate Text Content */}
+          <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Just work. we'll handle the rest.
+              Just work. We'll handle the rest.
             </h1>
             <p className="mt-6 text-xl text-muted-foreground">
               Streamlined collaboration, evaluation, and payments for SMEs and
@@ -53,23 +74,28 @@ export default function HeroSection() {
                 <Link href="/request-demo">Request Demo</Link>
               </Button>
             </div>
-          </div>
-          <div className="relative h-[350px] bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg overflow-hidden">
+          </motion.div>
+
+          {/* Animate Image Container */}
+          <motion.div
+            className="relative h-[350px] bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg overflow-hidden"
+            initial="hidden"
+            animate="visible"
+            variants={fadeIn}
+          >
             <MotionImage
-              // key={currentImageIndex} // Commented out for static image
-              src={placeholderImages[0]} // Set src directly to the first image
+              // key={currentImageIndex} // Commented out
+              src={placeholderImages[0]} // Use correct path if needed
               alt={`Placeholder Illustration 1`}
               fill
               style={{
                 objectFit: "cover",
                 objectPosition: "left center",
               }}
-              priority={true} // Prioritize loading the static image
-              // initial={{ opacity: 0 }} // Commented out
-              // animate={{ opacity: 1 }} // Commented out
-              // transition={{ duration: 0.8 }} // Commented out
+              priority={true}
+              // No separate motion props needed here as parent div handles animation
             />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
