@@ -1,56 +1,86 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { toast } from 'sonner'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { toast } from "sonner";
+
+// Define an interface for the expected API response
+interface ApiResponse {
+  success: boolean;
+  message: string;
+}
 
 export default function RequestDemoForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    company: '',
-    role: '',
-    message: ''
-  })
+    firstName: "",
+    lastName: "",
+    email: "",
+    company: "",
+    role: "",
+    message: "",
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target
-    setFormData(prev => ({ ...prev, [id]: value }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    console.log("Submitting demo request with data:", formData);
 
     try {
-      // In a real implementation, this would send data to the API
-      // For now, we'll simulate a successful API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      console.log('Requesting demo:', formData)
-      
-      // Reset form
+      const response = await fetch("/api/demo-request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      // Explicitly type the result based on the expected ApiResponse
+      const result = (await response.json()) as ApiResponse;
+
+      if (!response.ok || !result.success) {
+        // Use the message from the API response if available
+        console.error("API Error Response:", result);
+        throw new Error(result.message || "Failed to submit demo request");
+      }
+
+      console.log("API Success Response:", result);
+
+      // Reset form on success
       setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        company: '',
-        role: '',
-        message: ''
-      })
-      
-      // Show success message
-      toast.success('Demo request submitted! We\'ll contact you soon to schedule.')
+        firstName: "",
+        lastName: "",
+        email: "",
+        company: "",
+        role: "",
+        message: "",
+      });
+
+      // Show success message from API
+      toast.success(result.message);
     } catch (error) {
-      console.error('Error requesting demo:', error)
-      toast.error('There was an error submitting your request. Please try again.')
+      console.error("Error requesting demo:", error);
+      // Display specific error message from API if available, otherwise generic
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "There was an error submitting your request. Please try again.";
+      toast.error(errorMessage);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <section className="py-12 px-4 md:px-8 bg-muted/50 rounded-lg">
@@ -61,7 +91,7 @@ export default function RequestDemoForm() {
             See how Hoope can transform your workflow with a personalized demo.
           </p>
         </div>
-        
+
         <div className="bg-background rounded-lg p-6 shadow-sm">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -94,7 +124,7 @@ export default function RequestDemoForm() {
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Work Email*
@@ -109,7 +139,7 @@ export default function RequestDemoForm() {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="company" className="text-sm font-medium">
                 Company Name*
@@ -124,7 +154,7 @@ export default function RequestDemoForm() {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="role" className="text-sm font-medium">
                 Your Role
@@ -135,7 +165,9 @@ export default function RequestDemoForm() {
                 value={formData.role}
                 onChange={handleChange}
               >
-                <option value="" disabled>Select your role</option>
+                <option value="" disabled>
+                  Select your role
+                </option>
                 <option value="founder">Founder/CEO</option>
                 <option value="executive">Executive/Director</option>
                 <option value="manager">Manager</option>
@@ -143,7 +175,7 @@ export default function RequestDemoForm() {
                 <option value="other">Other</option>
               </select>
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="message" className="text-sm font-medium">
                 What are you most interested in learning about?
@@ -156,17 +188,13 @@ export default function RequestDemoForm() {
                 onChange={handleChange}
               ></textarea>
             </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Submitting...' : 'Request Demo'}
+
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Request Demo"}
             </Button>
-            
+
             <p className="text-xs text-muted-foreground text-center mt-4">
-              By submitting this form, you agree to our{' '}
+              By submitting this form, you agree to our{" "}
               <Link href="/privacy" className="underline hover:text-foreground">
                 Privacy Policy
               </Link>
@@ -176,5 +204,5 @@ export default function RequestDemoForm() {
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -10,18 +10,21 @@ console.log(
   !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 ); // Log if Key is present
 
-interface DemoRequestData {
+interface DemoRequestFormData {
   email: string;
-  name?: string;
-  company?: string;
+  firstName?: string;
+  lastName?: string;
+  company?: string; // Matches the field name from the demo form log
   message?: string;
+  // Include other fields if needed
+  role?: string;
 }
 
 export async function POST(request: Request) {
   console.log("--- Demo Request POST received ---");
   try {
     console.log("Parsing request data...");
-    const data = (await request.json()) as DemoRequestData;
+    const data = (await request.json()) as DemoRequestFormData;
     console.log("Request data parsed:", data);
 
     // Validate required fields
@@ -34,14 +37,33 @@ export async function POST(request: Request) {
     }
     console.log("Validation passed.");
 
-    // Insert data into Supabase
+    // Prepare data for Supabase insertion AND Email
+    const fullName =
+      [data.firstName, data.lastName].filter(Boolean).join(" ") || undefined;
+    const companyValue = data.company; // Use the field name from the interface
+    const messageValue = data.message;
+    const roleValue = data.role; // Get role from incoming data
+
+    const processedData = {
+      email: data.email,
+      name: fullName,
+      company: companyValue,
+      message: messageValue,
+      role: roleValue, // Include role
+    };
+
+    console.log(
+      `Prepared for DB & Email - Email: ${processedData.email}, Name: ${processedData.name}, Company: ${processedData.company}, Message: ${processedData.message}, Role: ${processedData.role}`
+    );
+
+    // Insert data into Supabase using correct fields
     console.log("Attempting Supabase insert...");
     const { error: dbError } = await supabase.from("demo_requests").insert([
       {
-        email: data.email,
-        name: data.name,
-        company: data.company,
-        message: data.message,
+        email: processedData.email,
+        name: processedData.name,
+        company: processedData.company,
+        message: processedData.message,
       },
     ]);
     console.log("Supabase insert attempt finished.");
@@ -53,9 +75,9 @@ export async function POST(request: Request) {
       console.log("Supabase insert successful.");
     }
 
-    // Send email notification using SendGrid
+    // Send email notification using SendGrid with FULL processed data
     console.log("Attempting to send email...");
-    const emailSent = await sendDemoRequestEmail(data);
+    const emailSent = await sendDemoRequestEmail(processedData);
     console.log("Email send attempt finished. Result:", emailSent);
 
     if (!emailSent) {

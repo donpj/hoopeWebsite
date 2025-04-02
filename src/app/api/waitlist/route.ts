@@ -10,17 +10,24 @@ console.log(
   !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 ); // Log if Key is present
 
-interface WaitlistData {
+// Adjust interface to reflect incoming data
+interface WaitlistFormData {
   email: string;
-  name?: string;
-  company?: string;
+  firstName?: string;
+  lastName?: string;
+  companyName?: string; // Use the name sent by the form
+  // Include other fields if needed, even if not saved to DB yet
+  profession?: string;
+  companySize?: string;
+  type?: string;
 }
 
 export async function POST(request: Request) {
   console.log("--- Waitlist POST request received ---");
   try {
     console.log("Parsing request data...");
-    const data = (await request.json()) as WaitlistData;
+    // Use the new interface reflecting frontend data
+    const data = (await request.json()) as WaitlistFormData;
     console.log("Request data parsed:", data);
 
     // Validate required fields
@@ -33,13 +40,36 @@ export async function POST(request: Request) {
     }
     console.log("Validation passed.");
 
-    // Insert data into Supabase
+    // Prepare data for Supabase insertion AND Email
+    const fullName =
+      [data.firstName, data.lastName].filter(Boolean).join(" ") || undefined;
+    const companyValue = data.companyName || undefined; // Use companyName from form data
+
+    // Validate and ensure 'type' matches the expected EmailData type
+    let formType: "individual" | "business" | undefined;
+    if (data.type === "individual" || data.type === "business") {
+      formType = data.type;
+    }
+
+    // Include all relevant fields from the form data for the email
+    const processedData = {
+      email: data.email,
+      name: fullName,
+      company: companyValue,
+      profession: data.profession,
+      companySize: data.companySize,
+      type: formType, // Use validated type
+    };
+
+    console.log(`Prepared for DB & Email - Data:`, processedData); // Log the full object
+
+    // Insert data into Supabase (only relevant fields for the DB table)
     console.log("Attempting Supabase insert...");
     const { error: dbError } = await supabase.from("waitlist_signups").insert([
       {
-        email: data.email,
-        name: data.name,
-        company: data.company,
+        email: processedData.email,
+        name: processedData.name,
+        company: processedData.company,
       },
     ]);
     console.log("Supabase insert attempt finished.");
@@ -52,9 +82,9 @@ export async function POST(request: Request) {
       console.log("Supabase insert successful.");
     }
 
-    // Send email notification using SendGrid
+    // Send email notification using SendGrid with FULL processed data
     console.log("Attempting to send email...");
-    const emailSent = await sendWaitlistEmail(data);
+    const emailSent = await sendWaitlistEmail(processedData);
     console.log("Email send attempt finished. Result:", emailSent);
 
     if (!emailSent) {
@@ -63,7 +93,10 @@ export async function POST(request: Request) {
     }
 
     // Log the signup
-    console.log("Waitlist signup (DB & Email) processing complete:", data);
+    console.log(
+      "Waitlist signup (DB & Email) processing complete:",
+      processedData
+    );
 
     return NextResponse.json({
       success: true,
