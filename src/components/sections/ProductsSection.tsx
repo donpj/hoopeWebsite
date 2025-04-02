@@ -208,15 +208,15 @@ export default function ProductsSection() {
                     </ul>
                   </div>
                   <motion.div
-                    className="bg-muted/50 rounded-lg p-8 h-[300px] flex items-center justify-center"
+                    className="bg-muted/50 rounded-lg h-[400px] flex items-center justify-center overflow-hidden relative"
                     variants={fadeInUp}
                   >
-                    <div className="text-center">
-                      <div className="text-4xl mb-4">👥</div>
-                      <p className="text-muted-foreground">
-                        Contractor Management Illustration
-                      </p>
-                    </div>
+                    <Image
+                      src="/images/placeholders/ganttChartLaptop.png"
+                      alt="Gantt Chart on Laptop Screen"
+                      fill
+                      className="object-cover"
+                    />
                   </motion.div>
                 </motion.div>
 
@@ -225,15 +225,15 @@ export default function ProductsSection() {
                   variants={fadeInUp}
                 >
                   <motion.div
-                    className="order-2 md:order-1 bg-muted/50 rounded-lg p-8 h-[300px] flex items-center justify-center"
+                    className="order-2 md:order-1 bg-muted/50 rounded-lg h-[400px] flex items-center justify-center overflow-hidden relative"
                     variants={fadeInUp}
                   >
-                    <div className="text-center">
-                      <div className="text-4xl mb-4">📊</div>
-                      <p className="text-muted-foreground">
-                        Analytics Dashboard Illustration
-                      </p>
-                    </div>
+                    <Image
+                      src="/images/placeholders/managementMobile.png"
+                      alt="Management screen on Mobile"
+                      fill
+                      className="object-cover"
+                    />
                   </motion.div>
                   <div className="order-1 md:order-2">
                     <h3 className="text-2xl font-bold">Powerful analytics</h3>
