@@ -1,14 +1,6 @@
 {
-  "/api/demo-request/route": "app/api/demo-request/route.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/api/waitlist/route": "app/api/waitlist/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/individuals/page": "app/individuals/page.js",
-  "/teams/page": "app/teams/page.js",
-  "/request-demo/page": "app/request-demo/page.js",
-  "/team/page": "app/team/page.js",
-  "/waitlist/page": "app/waitlist/page.js",
-  "/products/page": "app/products/page.js",
   "/page": "app/page.js",
-  "/about/page": "app/about/page.js"
+  "/teams/page": "app/teams/page.js",
+  "/individuals/page": "app/individuals/page.js"
 }
