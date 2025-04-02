@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import { Rocket, Handshake, Lightbulb } from "lucide-react";
 
 // Animation Variants (reuse or define locally)
 const fadeInUp = {
@@ -146,7 +147,9 @@ export default function TeamSection() {
             whileHover={{ y: -5 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="text-4xl mb-4">🚀</div>
+            <div className="flex justify-center mb-4 text-primary">
+              <Rocket size={36} />
+            </div>
             <h3 className="text-xl font-bold mb-2">Innovation</h3>
             <p className="text-muted-foreground">
               We're constantly exploring new ways to make independent work
@@ -159,7 +162,9 @@ export default function TeamSection() {
             whileHover={{ y: -5 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="text-4xl mb-4">🤝</div>
+            <div className="flex justify-center mb-4 text-primary">
+              <Handshake size={36} />
+            </div>
             <h3 className="text-xl font-bold mb-2">Collaboration</h3>
             <p className="text-muted-foreground">
               We believe in the power of working together to create solutions
@@ -172,7 +177,9 @@ export default function TeamSection() {
             whileHover={{ y: -5 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="text-4xl mb-4">💡</div>
+            <div className="flex justify-center mb-4 text-primary">
+              <Lightbulb size={36} />
+            </div>
             <h3 className="text-xl font-bold mb-2">Simplicity</h3>
             <p className="text-muted-foreground">
               We strive to make complex processes simple, so you can focus on
