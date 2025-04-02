@@ -77,6 +77,19 @@ export default function Header() {
             >
               Individuals
             </Link>
+            {/*
+            <Link
+              href="/about"
+              className={cn(
+                "text-base font-semibold transition-colors pb-1",
+                pathname === "/about"
+                  ? "underline underline-offset-4"
+                  : "hover:text-primary"
+              )}
+            >
+              About
+            </Link>
+            */}
             <Link
               href="/team"
               className={cn(
@@ -151,6 +164,18 @@ export default function Header() {
               onClick={() => setIsMenuOpen(false)}
             >
               Individuals
+            </Link>
+            <Link
+              href="/about"
+              className={cn(
+                "text-sm font-medium transition-colors",
+                pathname === "/about"
+                  ? "underline text-primary"
+                  : "hover:text-primary"
+              )}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About
             </Link>
             <Link
               href="/team"
