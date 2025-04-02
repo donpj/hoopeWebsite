@@ -1,19 +1,49 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+
+const placeholderImages = [
+  "/images/placeholders/1.png ",
+  "/images/placeholders/2.png",
+  "/images/placeholders/3.png",
+  "/images/placeholders/4.png",
+  "/images/placeholders/5.png",
+  "/images/placeholders/6.png",
+  "/images/placeholders/7.jpg",
+];
+
+// Create a motion-compatible Image component
+const MotionImage = motion(Image);
 
 export default function HeroSection() {
+  // Comment out state and effect for rotation
+  // const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     setCurrentImageIndex(
+  //       (prevIndex) => (prevIndex + 1) % placeholderImages.length
+  //     );
+  //   }, 3000); // Change image every 3 seconds
+
+  //   return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  // }, []);
+
   return (
     <section className="py-20 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              The happier workspace for independent work
+              Just work. we'll handle the rest.
             </h1>
             <p className="mt-6 text-xl text-muted-foreground">
-              Streamlined collaboration, evaluation, and payments for SMEs and independent professionals.
+              Streamlined collaboration, evaluation, and payments for SMEs and
+              independent professionals.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Button size="lg" asChild>
@@ -24,20 +54,24 @@ export default function HeroSection() {
               </Button>
             </div>
           </div>
-          <div className="relative h-[400px] bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg flex items-center justify-center">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <svg width="240" height="240" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 16V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 8H12.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <div className="text-center text-lg font-medium">
-              Illustration Placeholder
-            </div>
+          <div className="relative h-[350px] bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg overflow-hidden">
+            <MotionImage
+              // key={currentImageIndex} // Commented out for static image
+              src={placeholderImages[0]} // Set src directly to the first image
+              alt={`Placeholder Illustration 1`}
+              fill
+              style={{
+                objectFit: "cover",
+                objectPosition: "left center",
+              }}
+              priority={true} // Prioritize loading the static image
+              // initial={{ opacity: 0 }} // Commented out
+              // animate={{ opacity: 1 }} // Commented out
+              // transition={{ duration: 0.8 }} // Commented out
+            />
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
