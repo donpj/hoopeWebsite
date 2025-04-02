@@ -42,9 +42,6 @@ export default function IndividualsSection() {
 
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-20 items-center"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
           variants={staggerContainer}
         >
           <motion.div variants={fadeInUp}>
