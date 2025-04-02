@@ -52,13 +52,40 @@ export default function HeroSection() {
   // }, []);
 
   return (
-    <section className="py-20 px-4 md:px-8 overflow-hidden">
-      {" "}
-      {/* Added overflow-hidden */}
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <section className="py-20 px-4 md:px-8 overflow-hidden relative">
+      <div className="max-w-7xl mx-auto relative">
+        {/* Transparent Container for Ball - Left side only */}
+        <motion.div
+          className="absolute inset-y-0 left-0 w-full md:right-auto md:w-[calc(50%-1.5rem)] pointer-events-none overflow-hidden z-10"
+          // Spans full height (inset-y-0), full width on mobile, calculated width on md+
+        >
+          {/* Pong-like Circle Animation - Inside constrained container */}
+          <motion.div
+            className="absolute w-5 h-5 bg-primary rounded-full blur" // Ball style
+            style={{ top: "10%", left: "10%" }} // Initial position relative to *this* container
+            animate={{
+              // Diagonal path within this container
+              top: ["10%", "90%"],
+              left: ["10%", "90%"],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              repeatType: "mirror",
+              ease: "linear",
+            }}
+          />
+        </motion.div>
+
+        {/* Main Content Grid - Above ball container */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-20">
           {/* Animate Text Content */}
-          <motion.div initial="hidden" animate="visible" variants={fadeInUp}>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            className="relative z-10" // Ensure text is above ball if overlap occurs
+          >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Just work. We'll handle the rest.
             </h1>
@@ -84,8 +111,7 @@ export default function HeroSection() {
             variants={fadeIn}
           >
             <MotionImage
-              // key={currentImageIndex} // Commented out
-              src={placeholderImages[0]} // Use correct path if needed
+              src={placeholderImages[0]}
               alt={`Placeholder Illustration 1`}
               fill
               style={{
@@ -93,7 +119,6 @@ export default function HeroSection() {
                 objectPosition: "left center",
               }}
               priority={true}
-              // No separate motion props needed here as parent div handles animation
             />
           </motion.div>
         </div>
