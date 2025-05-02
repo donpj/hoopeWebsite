@@ -1,0 +1,6 @@
+[build]
+  command = "pnpm run build"
+  publish = ".next"
+
+# Add existing headers/redirects below if needed, 
+# otherwise leave them out if they are managed in the UI or not required. 
